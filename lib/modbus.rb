@@ -36,7 +36,9 @@ class Modbus
         encapsulated_interface_transport: 0x2B,
         canopen_general_request: 0x0D,
         read_device_identification: 0x0E
-    }.freeze
+    }
+    CODES.merge!(CODES.invert)
+    CODES.freeze
 
     def initialize
         @transaction = 0

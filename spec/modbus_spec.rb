@@ -58,4 +58,16 @@ describe 'modbus protocol helper' do
         data = @modbus.write_registers(5, 4).to_binary_s
         expect(data).to eq("\x00\x01\x00\x00\x00\x06\xFF\x06\x00\x05\x00\x04")
     end
+
+    it "should return the response values" do
+        data = "\x00\x00\x00\x00\x00\x04\xFF\x01\x1\x3"
+        @modbus.read(data) { |adu| @response = adu }
+        expect(@response.value).to eq([true, true, false, false, false, false, false, false])
+        expect(@response.function_name).to eq(:read_coils)
+
+        data = "\x00\x00\x00\x00\x00\x07\xFF\x03\x4\x0\x3\x1\x00"
+        @modbus.read(data) { |adu| @response = adu }
+        expect(@response.value).to eq([3, 256])
+        expect(@response.function_name).to eq(:read_holding_registers)
+    end
 end

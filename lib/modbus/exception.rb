@@ -3,15 +3,15 @@
 
 class Modbus
     EXCEPTIONS = {
-        0x01 => :illegal_function,
-        0x02 => :illegal_data_address,
-        0x03 => :illegal_data_value,
-        0x04 => :server_device_failure,
-        0x05 => :acknowledge, # processing will take some time, no need to retry
-        0x06 => :server_device_busy,
-        0x08 => :memory_parity_error,
-        0x0A => :gateway_path_unavailable,
-        0x0B => :gateway_device_failed_to_respond
+        0x01 => 'illegal function',
+        0x02 => 'illegal data address',
+        0x03 => 'illegal data value',
+        0x04 => 'server device failure',
+        0x05 => 'acknowledge', # processing will take some time, no need to retry
+        0x06 => 'server device busy',
+        0x08 => 'memory parity error',
+        0x0A => 'gateway path unavailable',
+        0x0B => 'gateway device failed to respond'
     }
 
     class ExceptionPDU < BinData::Record

@@ -19,6 +19,7 @@ class Modbus
         end
 
         def value
+            return EXCEPTIONS[pdu.exception_code] || "unknown error 0x#{pdu.exception_code.to_s(16)}" if exception?
             return nil unless pdu.is_a?(ResponsePDU) && READ_CODES.include?(function_code)
 
             bytes = pdu.get.data_length

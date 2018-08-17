@@ -34,11 +34,20 @@ modbus.read(byte_string) do |adu|
 
     # Response PDU returned
     if adu.exception?
+        # Get error message
+        puts adu.value
+        # Error code
         puts adu.pdu.exception_code
     else
-        case adu.function_code
-        when 0x01
-            puts adu.pdu.read.data.bytes
+        case adu.function_name
+        when :read_coils
+            # raw response data
+            puts adu.pdu.get.data.bytes
+            # or values
+            puts adu.value # => [true, false, true, false, false, false, false, false]
+        when :read_input_registers
+            # Grab the 16 bit values
+            puts adu.value # => [1234, 8822]
         end
     end
 end

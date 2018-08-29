@@ -1,6 +1,8 @@
 # encoding: ASCII-8BIT
 # frozen_string_literal: true
 
+require 'crc'
+
 class Modbus
     # TCP ADU are sent via TCP to registered port 502
     Modbus::ADU = Struct.new :header, :function_code, :pdu do
@@ -8,10 +10,17 @@ class Modbus
             pdu.is_a?(ExceptionPDU)
         end
 
-        def to_binary_s
+        def to_binary_s(serial: false)
             data = pdu.to_binary_s
             header.request_length = data.bytesize
-            "#{header.to_binary_s}#{data}"
+            if serial
+                # For serial line communication - no header
+                crc = ::CRC::CRC16_MODBUS.new
+                crc.update data
+                "#{data}#{crc.digest}"
+            else
+                "#{header.to_binary_s}#{data}"
+            end
         end
 
         def function_name

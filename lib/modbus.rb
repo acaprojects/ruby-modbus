@@ -47,8 +47,13 @@ class Modbus
     # Decodes an ADU from wire format and sets the attributes of this object.
     #
     # @param data [String] The bytes to decode.
-    def read(data)
+    def read(data, serial: false)
         @buffer ||= String.new
+        # add mock TCP header
+        if serial
+            @buffer << "\x0\x0\x0\x0\x0"
+            @buffer << (data.bytesize - 2)
+        end
         @buffer << data
 
         error = nil

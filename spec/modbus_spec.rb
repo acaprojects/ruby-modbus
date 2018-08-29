@@ -70,4 +70,15 @@ describe 'modbus protocol helper' do
         expect(@response.value).to eq([3, 256])
         expect(@response.function_name).to eq(:read_holding_registers)
     end
+
+    it "should generate a serial line request" do
+        data = @modbus.read_inputs(0).to_binary_s serial: true
+        expect(data).to eq("\xFF\x02\x00\x00\x00\x01\x14\xAC")
+    end
+
+    it "should parse a serial line response" do
+        serial_data = "\x1\x2\x3\xac\xdb\x35\x88\x22"
+        @modbus.read(serial_data, serial: true) { |adu| @response = adu }
+        expect(@response.to_binary_s serial: true).to eq(serial_data)
+    end
 end
